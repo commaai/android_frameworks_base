@@ -860,7 +860,7 @@ public class NotificationManagerService extends SystemService {
                 // if lights with screen on is disabled.
                 if (!mScreenOnEnabled) {
                     mNotificationLight.turnOff();
-                    mStatusBar.notificationLightOff();
+                    if (mStatusBar != null) mStatusBar.notificationLightOff();
                 }
             } else if (action.equals(Intent.ACTION_USER_SWITCHED)) {
                 final int user = intent.getIntExtra(Intent.EXTRA_USER_HANDLE, UserHandle.USER_NULL);
@@ -1140,7 +1140,7 @@ public class NotificationManagerService extends SystemService {
     private final Runnable mBuzzBeepBlinked = new Runnable() {
         @Override
         public void run() {
-            mStatusBar.buzzBeepBlinked();
+            if (mStatusBar != null) mStatusBar.buzzBeepBlinked();
         }
     };
 
@@ -1214,7 +1214,7 @@ public class NotificationManagerService extends SystemService {
 
         mListeners = new NotificationListeners();
         mStatusBar = getLocalService(StatusBarManagerInternal.class);
-        mStatusBar.setNotificationDelegate(mNotificationDelegate);
+        if (mStatusBar != null) mStatusBar.setNotificationDelegate(mNotificationDelegate);
 
         final LightsManager lights = getLocalService(LightsManager.class);
         mNotificationLight = lights.getLight(LightsManager.LIGHT_ID_NOTIFICATIONS);
@@ -3567,7 +3567,7 @@ public class NotificationManagerService extends SystemService {
 
         if (!enableLed) {
             mNotificationLight.turnOff();
-            mStatusBar.notificationLightOff();
+            if (mStatusBar != null) mStatusBar.notificationLightOff();
         } else {
             final Notification ledno = ledNotification.sbn.getNotification();
             final NotificationLedValues ledValues = getLedValuesForNotification(ledNotification);
@@ -3600,7 +3600,7 @@ public class NotificationManagerService extends SystemService {
             }
 
             // let SystemUI make an independent decision
-            mStatusBar.notificationLightPulse(ledARGB, ledOnMS, ledOffMS);
+            if (mStatusBar != null) mStatusBar.notificationLightPulse(ledARGB, ledOnMS, ledOffMS);
         }
     }
 

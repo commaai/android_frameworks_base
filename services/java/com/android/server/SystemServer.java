@@ -451,6 +451,7 @@ public final class SystemServer {
         EntropyMixer entropyMixer = null;
         CameraService cameraService = null;
 
+        final boolean comma = true;
         boolean disableStorage = SystemProperties.getBoolean("config.disable_storage", false);
         boolean disableBluetooth = SystemProperties.getBoolean("config.disable_bluetooth", false);
         boolean disableLocation = SystemProperties.getBoolean("config.disable_location", false);
@@ -647,7 +648,7 @@ public final class SystemServer {
                 mSystemServiceManager.startService(DevicePolicyManagerService.Lifecycle.class);
             }
 
-            if (!disableSystemUI) {
+            if (!disableSystemUI && !comma) {
                 try {
                     Slog.i(TAG, "Status Bar");
                     statusBar = new StatusBarManagerService(context, wm);
@@ -657,7 +658,7 @@ public final class SystemServer {
                 }
             }
 
-            if (!disableNonCoreServices) {
+            if (!disableNonCoreServices && !comma) {
                 try {
                     Slog.i(TAG, "Clipboard Service");
                     ServiceManager.addService(Context.CLIPBOARD_SERVICE,
@@ -677,7 +678,7 @@ public final class SystemServer {
                 }
             }
 
-            if (!disableNonCoreServices) {
+            if (!disableNonCoreServices && !comma) {
                 try {
                     Slog.i(TAG, "Text Service Manager Service");
                     tsms = new TextServicesManagerService(context);
@@ -748,7 +749,7 @@ public final class SystemServer {
                 }
             }
 
-            if (!disableNonCoreServices) {
+            if (!disableNonCoreServices && !comma) {
                 try {
                     Slog.i(TAG, "UpdateLock Service");
                     ServiceManager.addService(Context.UPDATE_LOCK_SERVICE,
@@ -809,7 +810,7 @@ public final class SystemServer {
                 }
             }
 
-            if (!disableNonCoreServices) {
+            if (!disableNonCoreServices && !comma) {
                 try {
                     Slog.i(TAG, "Search Service");
                     ServiceManager.addService(Context.SEARCH_SERVICE,
@@ -828,7 +829,7 @@ public final class SystemServer {
             }
 
             if (!disableNonCoreServices && context.getResources().getBoolean(
-                        R.bool.config_enableWallpaperService)) {
+                        R.bool.config_enableWallpaperService) && !comma) {
                 try {
                     Slog.i(TAG, "Wallpaper Service");
                     wallpaper = new WallpaperManagerService(context);
@@ -846,7 +847,7 @@ public final class SystemServer {
                 reportWtf("starting Audio Service", e);
             }
 
-            if (!disableNonCoreServices) {
+            if (!disableNonCoreServices && !comma) {
                 mSystemServiceManager.startService(DockObserver.class);
 
                 if (context.getPackageManager().hasSystemFeature
@@ -865,7 +866,7 @@ public final class SystemServer {
             }
 
             if (!disableNonCoreServices) {
-                if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+                if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_MIDI) && !comma) {
                     // Start MIDI Manager service
                     mSystemServiceManager.startService(MIDI_SERVICE_CLASS);
                 }
@@ -887,16 +888,16 @@ public final class SystemServer {
                 }
             }
 
-            mSystemServiceManager.startService(TwilightService.class);
+            if (!comma) mSystemServiceManager.startService(TwilightService.class);
 
             mSystemServiceManager.startService(JobSchedulerService.class);
 
             if (!disableNonCoreServices) {
-                if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_BACKUP)) {
+                if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_BACKUP) && !comma) {
                     mSystemServiceManager.startService(BACKUP_MANAGER_SERVICE_CLASS);
                 }
 
-                if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_APP_WIDGETS)) {
+                if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_APP_WIDGETS) && !comma) {
                     mSystemServiceManager.startService(APPWIDGET_SERVICE_CLASS);
                 }
 
@@ -904,7 +905,7 @@ public final class SystemServer {
                     mSystemServiceManager.startService(VOICE_RECOGNITION_MANAGER_SERVICE_CLASS);
                 }
 
-                if (GestureLauncherService.isGestureLauncherEnabled(context.getResources())) {
+                if (GestureLauncherService.isGestureLauncherEnabled(context.getResources()) && !comma) {
                     Slog.i(TAG, "Gesture Launcher Service");
                     mSystemServiceManager.startService(GestureLauncherService.class);
                 }
@@ -955,12 +956,12 @@ public final class SystemServer {
                 }
             }
 
-            if (!disableNonCoreServices) {
+            if (!disableNonCoreServices && !comma) {
                 // Dreams (interactive idle-time views, a/k/a screen savers, and doze mode)
                 mSystemServiceManager.startService(DreamManagerService.class);
             }
 
-            if (!disableNonCoreServices && !disableAtlas) {
+            if (!disableNonCoreServices && !disableAtlas && !comma) {
                 try {
                     Slog.i(TAG, "Assets Atlas Service");
                     atlas = new AssetAtlasService(context);
@@ -970,13 +971,13 @@ public final class SystemServer {
                 }
             }
 
-            if (!disableNonCoreServices) {
+            if (!disableNonCoreServices && !comma) {
                 ServiceManager.addService(GraphicsStatsService.GRAPHICS_STATS_SERVICE,
                         new GraphicsStatsService(context));
             }
 
             if (context.getResources().getBoolean(
-                    com.android.internal.R.bool.config_enableGestureService)) {
+                    com.android.internal.R.bool.config_enableGestureService) && !comma) {
                 try {
                     Slog.i(TAG, "Gesture Sensor Service");
                     gestureService = new GestureService(context, inputManager);
@@ -986,7 +987,7 @@ public final class SystemServer {
                 }
             }
 
-            if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_PRINTING)) {
+            if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_PRINTING) && !comma) {
                 mSystemServiceManager.startService(PRINT_MANAGER_SERVICE_CLASS);
             }
 
@@ -994,15 +995,15 @@ public final class SystemServer {
 
             mSystemServiceManager.startService(MediaSessionService.class);
 
-            if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_HDMI_CEC)) {
+            if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_HDMI_CEC) && !comma) {
                 mSystemServiceManager.startService(HdmiControlService.class);
             }
 
-            if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_LIVE_TV)) {
+            if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_LIVE_TV) && !comma) {
                 mSystemServiceManager.startService(TvInputManagerService.class);
             }
 
-            if (!disableNonCoreServices) {
+            if (!disableNonCoreServices && !comma) {
                 try {
                     Slog.i(TAG, "Media Router Service");
                     mediaRouter = new MediaRouterService(context);
@@ -1027,7 +1028,7 @@ public final class SystemServer {
             mSystemServiceManager.startService(LauncherAppsService.class);
         }
 
-        if (!disableNonCoreServices) {
+        if (!disableNonCoreServices && !comma) {
             mSystemServiceManager.startService(MediaProjectionManagerService.class);
         }
 
@@ -1190,7 +1191,7 @@ public final class SystemServer {
                 WebViewFactory.prepareWebViewInSystemServer();
 
                 try {
-                    startSystemUi(context);
+                    if (!comma) startSystemUi(context);
                 } catch (Throwable e) {
                     reportWtf("starting System UI", e);
                 }
