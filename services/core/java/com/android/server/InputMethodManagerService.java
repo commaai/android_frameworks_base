@@ -1140,7 +1140,7 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
                 mNotificationManager = (NotificationManager)
                         mContext.getSystemService(Context.NOTIFICATION_SERVICE);
                 mStatusBar = statusBar;
-                statusBar.setIconVisibility("ime", false);
+                if (statusBar != null) statusBar.setIconVisibility("ime", false);
                 updateSystemUiLocked(mCurToken, mImeWindowVis, mBackDisposition);
                 if (mShowOngoingImeSwitcherForPhones) {
                     mWindowManagerService.setOnHardKeyboardStatusChangeListener(

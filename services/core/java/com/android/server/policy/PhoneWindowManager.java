@@ -1233,6 +1233,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             return;
         }
 
+        // comma hax
+        if (1 == 1) return;
+
         if (count == 2) {
             powerMultiPressAction(eventTime, interactive, mDoublePressOnPowerBehavior);
         } else if (count == 3) {
@@ -1378,7 +1381,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     }
 
     private long getScreenshotChordLongPressDelay() {
-        if (mKeyguardDelegate.isShowing()) {
+        if (mKeyguardDelegate != null && mKeyguardDelegate.isShowing()) {
             // Double the time it takes to take a screenshot from the keyguard
             return (long) (KEYGUARD_SCREENSHOT_CHORD_DELAY_MULTIPLIER *
                     ViewConfiguration.get(mContext).getDeviceGlobalActionKeyTimeout());
@@ -2924,7 +2927,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         if (mStatusBar == win) {
             mStatusBar = null;
             mStatusBarController.setWindow(null);
-            mKeyguardDelegate.showScrim();
+            if (mKeyguardDelegate != null) mKeyguardDelegate.showScrim();
         } else if (mKeyguardScrim == win) {
             Log.v(TAG, "Removing keyguard scrim");
             mKeyguardScrim = null;
@@ -3889,7 +3892,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 return;
             }
 
-            if (!mHideLockScreen && mKeyguardDelegate.isInputRestricted()) {
+            if (!mHideLockScreen && mKeyguardDelegate != null && mKeyguardDelegate.isInputRestricted()) {
                 // when in keyguard restricted mode, must first verify unlock
                 // before launching home
                 mKeyguardDelegate.verifyUnlock(new OnKeyguardExitResult() {
@@ -5064,7 +5067,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 mForceStatusBarTransparent = true;
             }
         } else if (attrs.type == TYPE_KEYGUARD_PANEL) {
-            if (mKeyguardDelegate.isKeyguardPanelFocused()) {
+            if (mKeyguardDelegate != null && mKeyguardDelegate.isKeyguardPanelFocused()) {
                 attrs.flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
                 attrs.flags |= WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
             } else {
@@ -5357,6 +5360,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
      */
     private boolean setKeyguardOccludedLw(boolean isOccluded) {
         boolean wasOccluded = mKeyguardOccluded;
+        if (mKeyguardDelegate == null) return false;
         if (wasOccluded && !isOccluded) {
             mKeyguardOccluded = false;
             mKeyguardDelegate.setOccluded(false);
@@ -6988,8 +6992,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     /** {@inheritDoc} */
     @Override
     public void systemReady() {
-        mKeyguardDelegate = new KeyguardServiceDelegate(mContext);
-        mKeyguardDelegate.onSystemReady();
+        // comma hax
+        // mKeyguardDelegate = new KeyguardServiceDelegate(mContext);
+        // mKeyguardDelegate.onSystemReady();
 
         mCMHardware = CMHardwareManager.getInstance(mContext);
         // Ensure observe happens in systemReady() since we need
@@ -7016,7 +7021,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
         }
 
-        if (bindKeyguardNow) {
+        if (bindKeyguardNow && mKeyguardDelegate != null) {
             mKeyguardDelegate.bindService(mContext);
             mKeyguardDelegate.onBootCompleted();
         }
@@ -7056,14 +7061,14 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     @Override
     public void updateBootProgress(final int stage, final ApplicationInfo optimizedApp,
             final int currentAppPos, final int totalAppCount) {
-        mHandler.post(new Runnable() {
-            @Override public void run() {
-                if (mBootMsgDialog == null) {
-                    mBootMsgDialog = BootDexoptDialog.create(mContext);
-                }
-                mBootMsgDialog.setProgress(stage, optimizedApp, currentAppPos, totalAppCount);
-            }
-        });
+        // mHandler.post(new Runnable() {
+        //     @Override public void run() {
+        //         if (mBootMsgDialog == null) {
+        //             mBootMsgDialog = BootDexoptDialog.create(mContext);
+        //         }
+        //         mBootMsgDialog.setProgress(stage, optimizedApp, currentAppPos, totalAppCount);
+        //     }
+        // });
     }
 
     /** {@inheritDoc} */
