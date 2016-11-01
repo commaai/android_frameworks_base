@@ -1297,6 +1297,14 @@ public final class SystemServer {
                 } catch (Throwable e) {
                     reportWtf("Notifying MmsService running", e);
                 }
+
+                // comma hax: the home stack idle event usually triggers finished boot,
+                // but we we have no home stack, so finish booting right now.
+                synchronized (mActivityManagerService) {
+                    mActivityManagerService.mBooting = false;
+                    mActivityManagerService.mBooted = true;
+                    mActivityManagerService.postFinishBooting(true, true);
+                }
             }
         });
     }

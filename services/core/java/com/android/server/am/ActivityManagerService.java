@@ -1044,7 +1044,7 @@ public final class ActivityManagerService extends ActivityManagerNative
     String mTopData;
     boolean mProcessesReady = false;
     boolean mSystemReady = false;
-    boolean mBooting = false;
+    public boolean mBooting = false;
     boolean mCallFinishBooting = false;
     boolean mBootAnimationComplete = false;
     boolean mWaitingUpdate = false;
@@ -1310,7 +1310,7 @@ public final class ActivityManagerService extends ActivityManagerNative
     /**
      * Set to true after the system has finished booting.
      */
-    boolean mBooted = false;
+    public boolean mBooted = false;
 
     int mProcessLimit = ProcessList.MAX_CACHED_APPS;
     int mProcessLimitOverride = -1;
@@ -6553,7 +6553,7 @@ public final class ActivityManagerService extends ActivityManagerNative
         Binder.restoreCallingIdentity(origId);
     }
 
-    void postFinishBooting(boolean finishBooting, boolean enableScreen) {
+    public void postFinishBooting(boolean finishBooting, boolean enableScreen) {
         mHandler.sendMessage(mHandler.obtainMessage(FINISH_BOOTING_MSG,
                 finishBooting ? 1 : 0, enableScreen ? 1 : 0));
     }
