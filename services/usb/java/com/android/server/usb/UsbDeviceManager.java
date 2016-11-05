@@ -225,7 +225,7 @@ public class UsbDeviceManager {
 
         boolean secureAdbEnabled = SystemProperties.getBoolean("ro.adb.secure", false);
         boolean dataEncrypted = "1".equals(SystemProperties.get("vold.decrypt"));
-        if (secureAdbEnabled && !dataEncrypted) {
+        if (secureAdbEnabled && !dataEncrypted && false) { // comma hax
             mDebuggingManager = new UsbDebuggingManager(context);
         }
         mContext.registerReceiver(mHostReceiver,
