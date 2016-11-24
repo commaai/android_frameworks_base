@@ -486,7 +486,7 @@ public class WindowManagerService extends IWindowManager.Stub
     /** All DisplayContents in the world, kept here */
     SparseArray<DisplayContent> mDisplayContents = new SparseArray<>(2);
 
-    int mRotation = 0;
+    int mRotation = SystemProperties.getInt("persist.panel.orientation", 0) / 90;
     int mForcedAppOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
     boolean mAltOrientation = false;
 
@@ -5822,7 +5822,6 @@ public class WindowManagerService extends IWindowManager.Stub
     }
 
     private boolean checkWaitingForWindowsLocked() {
-
         boolean haveBootMsg = false;
         boolean haveApp = false;
         // if the wallpaper service is disabled on the device, we're never going to have
@@ -5865,6 +5864,8 @@ public class WindowManagerService extends IWindowManager.Stub
         if (!mSystemBooted && !haveBootMsg) {
             return true;
         }
+
+        if (mSystemBooted) return false; // comma hax
 
         // If we are turning on the screen after the boot is completed
         // normally, don't do so until we have the application and

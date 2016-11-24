@@ -2624,6 +2624,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
                 loadStringSetting(stmt, Settings.System.DATE_FORMAT,
                         R.string.def_date_format);
             }
+
+            // comma hax
+            loadIntegerSetting(stmt, Settings.System.USER_ROTATION, R.integer.def_user_rotation);
         } finally {
             if (stmt != null) stmt.close();
         }
@@ -2998,6 +3001,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
                     R.integer.def_captive_portal_detection_enabled);
 
 
+            // comma hax
             loadSetting(stmt, Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 1);
 
         } finally {
