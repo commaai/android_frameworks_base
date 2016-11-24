@@ -12301,13 +12301,14 @@ public final class ActivityManagerService extends ActivityManagerNative
 
             // Start up initial activity.
             mBooting = true;
-            startHomeActivityLocked(mCurrentUserId, "systemReady");
 
-            // start the power off alarm by boot mode
-            boolean isAlarmBoot = SystemProperties.getBoolean("ro.alarm_boot", false);
-            if (isAlarmBoot) {
-                startAlarmActivityLocked();
-            }
+            // startHomeActivityLocked(mCurrentUserId, "systemReady");
+
+            // // start the power off alarm by boot mode
+            // boolean isAlarmBoot = SystemProperties.getBoolean("ro.alarm_boot", false);
+            // if (isAlarmBoot) {
+            //     startAlarmActivityLocked();
+            // }
 
             try {
                 if (AppGlobals.getPackageManager().hasSystemUidErrors()) {
@@ -12352,6 +12353,13 @@ public final class ActivityManagerService extends ActivityManagerNative
             }
             mStackSupervisor.resumeTopActivitiesLocked();
             sendUserSwitchBroadcastsLocked(-1, mCurrentUserId);
+
+
+            // comma hax: the home stack idle event usually triggers finished boot,
+            // but we we have no home stack, so finish booting right now.
+            mBooting = false;
+            mBooted = true;
+            postFinishBooting(true, true);
         }
     }
 

@@ -6902,7 +6902,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     if (preferredRotation >= 0) {
                         return preferredRotation;
                     }
-                    return Surface.ROTATION_0;
+                    return SystemProperties.getInt("persist.panel.orientation", 0) / 90;
             }
         }
     }
