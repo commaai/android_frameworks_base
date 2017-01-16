@@ -495,7 +495,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
             try {
                 IPowerManager pm = IPowerManager.Stub.asInterface(ServiceManager
                         .getService(Context.POWER_SERVICE));
-                pm.reboot(true, null, false);
+                pm.reboot(false, null, false);
             } catch (RemoteException e) {
                 Log.e(TAG, "PowerManager service died!", e);
                 return;
