@@ -658,7 +658,7 @@ public final class SystemServer {
                 }
             }
 
-            if (!disableNonCoreServices && !comma) {
+            if (!disableNonCoreServices) {
                 try {
                     Slog.i(TAG, "Clipboard Service");
                     ServiceManager.addService(Context.CLIPBOARD_SERVICE,
@@ -678,7 +678,7 @@ public final class SystemServer {
                 }
             }
 
-            if (!disableNonCoreServices && !comma) {
+            if (!disableNonCoreServices) {
                 try {
                     Slog.i(TAG, "Text Service Manager Service");
                     tsms = new TextServicesManagerService(context);
