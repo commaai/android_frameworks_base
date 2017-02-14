@@ -387,7 +387,7 @@ final class TaskRecord {
         } else {
             autoRemoveRecents = false;
         }
-        mResizeable = info.resizeable;
+        mResizeable = true; // info.resizeable; resizeableActivity doesn't actually work in android M
         mLockTaskMode = info.lockTaskLaunchMode;
         mPrivileged = (info.applicationInfo.privateFlags & PRIVATE_FLAG_PRIVILEGED) != 0;
         setLockTaskAuth();
