@@ -508,7 +508,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
                 R.string.global_action_screenshot) {
 
             public void onPress() {
-                takeScreenshot();
+                // takeScreenshot();
             }
 
             public boolean showDuringKeyguard() {
