@@ -1407,7 +1407,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private final Runnable mScreenshotRunnable = new Runnable() {
         @Override
         public void run() {
-            takeScreenshot();
+            // takeScreenshot();
         }
     };
 

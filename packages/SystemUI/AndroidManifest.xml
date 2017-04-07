@@ -163,9 +163,9 @@
 
         <!-- started from PhoneWindowManager
              TODO: Should have an android:permission attribute -->
-        <service android:name=".screenshot.TakeScreenshotService"
+        <!-- <service android:name=".screenshot.TakeScreenshotService"
             android:process=":screenshot"
-            android:exported="false" />
+            android:exported="false" /> -->
 
         <service android:name=".LoadAverageService"
                 android:exported="true" />
