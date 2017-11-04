@@ -4563,7 +4563,8 @@ public final class ActivityStackSupervisor implements DisplayListener {
         // Never start a new task on an ActivityView if it isn't explicitly specified.
         @Override
         boolean isEligibleForNewTasks() {
-            return false;
+            // return false;
+            return true;
         }
 
         private void setSurfaceIfReadyLocked() {
