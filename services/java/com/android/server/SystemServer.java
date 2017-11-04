@@ -1003,7 +1003,7 @@ public final class SystemServer {
                 mSystemServiceManager.startService(TvInputManagerService.class);
             }
 
-            if (!disableNonCoreServices && !comma) {
+            if (!disableNonCoreServices) {
                 try {
                     Slog.i(TAG, "Media Router Service");
                     mediaRouter = new MediaRouterService(context);
@@ -1012,15 +1012,17 @@ public final class SystemServer {
                     reportWtf("starting MediaRouterService", e);
                 }
 
-                mSystemServiceManager.startService(TrustManagerService.class);
+                if (!comma) {
+                    mSystemServiceManager.startService(TrustManagerService.class);
 
-                mSystemServiceManager.startService(FingerprintService.class);
+                    mSystemServiceManager.startService(FingerprintService.class);
 
-                try {
-                    Slog.i(TAG, "BackgroundDexOptService");
-                    BackgroundDexOptService.schedule(context, 0);
-                } catch (Throwable e) {
-                    reportWtf("starting BackgroundDexOptService", e);
+                    try {
+                        Slog.i(TAG, "BackgroundDexOptService");
+                        BackgroundDexOptService.schedule(context, 0);
+                    } catch (Throwable e) {
+                        reportWtf("starting BackgroundDexOptService", e);
+                    }
                 }
 
             }
