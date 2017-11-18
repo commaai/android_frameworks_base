@@ -66,6 +66,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import android.hardware.display.DisplayManager;
+import android.view.Display;
+
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
@@ -271,6 +274,8 @@ public class InputMethodService extends AbstractInputMethodService {
     FrameLayout mExtractFrame;
     FrameLayout mCandidatesFrame;
     FrameLayout mInputFrame;
+
+    int mDisplayId;
     
     IBinder mToken;
     
@@ -368,6 +373,7 @@ public class InputMethodService extends AbstractInputMethodService {
          * Take care of attaching the given window token provided by the system.
          */
         public void attachToken(IBinder token) {
+            if (DEBUG) Log.v(TAG, "attachToken "+token);
             if (mToken == null) {
                 mToken = token;
                 mWindow.setToken(token);
@@ -434,7 +440,7 @@ public class InputMethodService extends AbstractInputMethodService {
          * Handle a request by the system to show the soft input area.
          */
         public void showSoftInput(int flags, ResultReceiver resultReceiver) {
-            if (DEBUG) Log.v(TAG, "showSoftInput()");
+            if (DEBUG) Log.v(TAG, "showSoftInput flags="+flags+" resultReceiver="+resultReceiver);
             boolean wasVis = isInputViewShown();
             mShowInputFlags = 0;
             if (onShowInputRequested(flags, false)) {
@@ -674,6 +680,44 @@ public class InputMethodService extends AbstractInputMethodService {
         return false;
     }
 
+    void updateWindow() {
+        if (DEBUG) Log.v(TAG, "updateWindow");
+        // hack: create window on last display
+        DisplayManager dm = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
+        final Display[] displays = dm.getDisplays();
+        Display display = displays[displays.length-1];
+
+        if (mWindow != null && display.getDisplayId() == mDisplayId) {
+            return; // nothing to do
+        }
+
+        IBinder token = null;
+        if (mWindow != null) {
+            if (mWindow.getWindow() != null) {
+                token = mWindow.getWindow().getAttributes().token;
+            }
+            if (DEBUG) Log.v(TAG, "killing window "+mWindow+" token="+token);
+            mWindow.dismiss();
+            mWindow = null;
+        }
+
+        Context windowContext = createDisplayContext(display);
+
+        mWindow = new SoftInputWindow(windowContext, "InputMethod", mTheme, null, null, mDispatcherState,
+                WindowManager.LayoutParams.TYPE_INPUT_METHOD, Gravity.BOTTOM, false);
+        if (mHardwareAccelerated) {
+            mWindow.getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        }
+        initViews();
+        mWindow.getWindow().setLayout(MATCH_PARENT, WRAP_CONTENT);
+
+        if (token != null) {
+            mWindow.setToken(token);
+        }
+
+        mDisplayId = display.getDisplayId();
+    }
+
     @Override public void onCreate() {
         mTheme = Resources.selectSystemTheme(mTheme,
                 getApplicationInfo().targetSdkVersion,
@@ -689,13 +733,11 @@ public class InputMethodService extends AbstractInputMethodService {
         mShouldClearInsetOfPreviousIme = (mImm.getInputMethodWindowVisibleHeight() > 0);
         mInflater = (LayoutInflater)getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
-        mWindow = new SoftInputWindow(this, "InputMethod", mTheme, null, null, mDispatcherState,
-                WindowManager.LayoutParams.TYPE_INPUT_METHOD, Gravity.BOTTOM, false);
-        if (mHardwareAccelerated) {
-            mWindow.getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        }
-        initViews();
-        mWindow.getWindow().setLayout(MATCH_PARENT, WRAP_CONTENT);
+        
+        if (DEBUG) Log.v(TAG, "onCreate");
+
+        mDisplayId = -1;
+        updateWindow();
     }
 
     /**
@@ -785,8 +827,10 @@ public class InputMethodService extends AbstractInputMethodService {
      * appropriate functions if the UI is displayed.
      */
     @Override public void onConfigurationChanged(Configuration newConfig) {
+        if (DEBUG) Log.v(TAG, "onConfigurationChanged");
+
         super.onConfigurationChanged(newConfig);
-        
+
         boolean visible = mWindowVisible;
         int showFlags = mShowInputFlags;
         boolean showingInput = mShowInputRequested;
@@ -876,8 +920,14 @@ public class InputMethodService extends AbstractInputMethodService {
      * screen orientation changes.
      */
     public int getMaxWidth() {
-        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        return wm.getDefaultDisplay().getWidth();
+        if (DEBUG) Log.v(TAG, "getMaxWidth");
+        // if (mDisplayId)
+        // WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        // return wm.getDefaultDisplay().getWidth();
+        DisplayManager dm = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
+        final Display[] displays = dm.getDisplays();
+        Display display = displays[displays.length-1];
+        return display.getWidth();
     }
     
     /**
@@ -976,6 +1026,8 @@ public class InputMethodService extends AbstractInputMethodService {
      */
     public void onConfigureWindow(Window win, boolean isFullscreen,
             boolean isCandidatesOnly) {
+        if (DEBUG) Log.v(TAG, "onConfigureWindow");
+
         final int currentHeight = mWindow.getWindow().getAttributes().height;
         final int newHeight = isFullscreen ? MATCH_PARENT : WRAP_CONTENT;
         if (mIsInputViewShown && currentHeight != newHeight) {
@@ -1457,6 +1509,8 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     void showWindowInner(boolean showInput) {
+        if (DEBUG) Log.v(TAG, "showWindowInner "+showInput);
+
         boolean doShowInput = false;
         final int previousImeWindowStatus =
                 (mWindowVisible ? IME_ACTIVE : 0) | (isInputViewShown() ? IME_VISIBLE : 0);
@@ -1473,6 +1527,9 @@ public class InputMethodService extends AbstractInputMethodService {
         }
 
         if (DEBUG) Log.v(TAG, "showWindow: updating UI");
+
+        updateWindow();
+
         initialize();
         updateFullscreenMode();
         updateInputViewShown();

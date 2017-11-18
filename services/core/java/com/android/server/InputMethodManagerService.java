@@ -1014,6 +1014,7 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
 
     private void resetAllInternalStateLocked(final boolean updateOnlyWhenLocaleChanged,
             final boolean resetDefaultEnabledIme) {
+        if (DEBUG) Slog.v(TAG, "resetAllInternalStateLocked");
         if (!mSystemReady) {
             // not system ready
             return;
@@ -1217,6 +1218,7 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
 
     private boolean bindCurrentInputMethodService(
             Intent service, ServiceConnection conn, int flags) {
+        if (DEBUG) Slog.v(TAG, "bindCurrentInputMethodService");
         if (service == null || conn == null) {
             Slog.e(TAG, "--- bind failed: service = " + service + ", conn = " + conn);
             return false;
@@ -2102,7 +2104,9 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
     @Override
     public boolean showSoftInput(IInputMethodClient client, int flags,
             ResultReceiver resultReceiver) {
+        if (DEBUG) Slog.i(TAG, "showSoftInput");
         if (!calledFromValidUser()) {
+            if (DEBUG) Slog.i(TAG, "showSoftInput - bad user");
             return false;
         }
         int uid = Binder.getCallingUid();
@@ -2120,6 +2124,7 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
                             return false;
                         }
                     } catch (RemoteException e) {
+                        if (DEBUG) Slog.i(TAG, "showSoftInput - remote exception");
                         return false;
                     }
                 }
@@ -2139,7 +2144,7 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
         }
         if ((flags&InputMethodManager.SHOW_FORCED) != 0) {
             mShowExplicitlyRequested = true;
-            mShowForced = true;
+        //     mShowForced = true; // why is this flag getting set?
         }
 
         if (!mSystemReady) {
@@ -2148,7 +2153,7 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
 
         boolean res = false;
         if (mCurMethod != null) {
-            if (DEBUG) Slog.d(TAG, "showCurrentInputLocked: mCurToken=" + mCurToken);
+            if (DEBUG) Slog.d(TAG, "showCurrentInputLocked: mCurToken=" + mCurToken + " flags="+flags);
             executeOrSendMessage(mCurMethod, mCaller.obtainMessageIOO(
                     MSG_SHOW_SOFT_INPUT, getImeShowFlags(), mCurMethod,
                     resultReceiver));

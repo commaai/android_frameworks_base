@@ -1420,7 +1420,7 @@ public class WindowManagerService extends IWindowManager.Stub
         // TODO(multidisplay): Needs some serious rethought when the target and IME are not on the
         // same display. Or even when the current IME/target are not on the same screen as the next
         // IME/target. For now only look for input windows on the main screen.
-        WindowList windows = getDefaultWindowListLocked();
+        WindowList windows = getHackyWindowListLocked();
         WindowState w = null;
         int i;
         for (i = windows.size() - 1; i >= 0; --i) {
@@ -1558,7 +1558,7 @@ public class WindowManagerService extends IWindowManager.Stub
             if (DEBUG_WINDOW_MOVEMENT || DEBUG_ADD_REMOVE) Slog.v(
                     TAG, "Adding input method window " + win + " at " + pos);
             // TODO(multidisplay): IMEs are only supported on the default display.
-            getDefaultWindowListLocked().add(pos, win);
+            getHackyWindowListLocked().add(pos, win);
             mWindowsChanged = true;
             moveInputMethodDialogsLocked(pos+1);
             return;
@@ -1646,7 +1646,7 @@ public class WindowManagerService extends IWindowManager.Stub
         ArrayList<WindowState> dialogs = mInputMethodDialogs;
 
         // TODO(multidisplay): IMEs are only supported on the default display.
-        WindowList windows = getDefaultWindowListLocked();
+        WindowList windows = getHackyWindowListLocked();
         final int N = dialogs.size();
         if (DEBUG_INPUT_METHOD) Slog.v(TAG, "Removing " + N + " dialogs w/pos=" + pos);
         for (int i=0; i<N; i++) {
@@ -1701,7 +1701,7 @@ public class WindowManagerService extends IWindowManager.Stub
         }
 
         // TODO(multidisplay): IMEs are only supported on the default display.
-        WindowList windows = getDefaultWindowListLocked();
+        WindowList windows = getHackyWindowListLocked();
 
         int imPos = findDesiredInputMethodWindowIndexLocked(true);
         if (imPos >= 0) {
@@ -8376,7 +8376,7 @@ public class WindowManagerService extends IWindowManager.Stub
             int idx = findDesiredInputMethodWindowIndexLocked(false);
             if (idx > 0) {
                 // TODO(multidisplay): IMEs are only supported on the default display.
-                WindowState imFocus = getDefaultWindowListLocked().get(idx-1);
+                WindowState imFocus = getHackyWindowListLocked().get(idx-1);
                 if (DEBUG_INPUT_METHOD) {
                     Slog.i(TAG, "Desired input method target: " + imFocus);
                     Slog.i(TAG, "Current focus: " + mCurrentFocus);
@@ -10768,9 +10768,12 @@ public class WindowManagerService extends IWindowManager.Stub
     }
 
     private boolean updateFocusedWindowLocked(int mode, boolean updateInputWindows) {
+        if (DEBUG_FOCUS) Slog.v(TAG, "updateFocusedWindowLocked mode=" + mode + " updateInputWindows = " + updateInputWindows);
         WindowState newFocus = computeFocusedWindowLocked();
+        if (DEBUG_FOCUS) Slog.v(TAG, "updateFocusedWindowLocked newFocus=" + newFocus + " mCurrentFocus = " + mCurrentFocus);
         if (mCurrentFocus != newFocus) {
             Trace.traceBegin(Trace.TRACE_TAG_WINDOW_MANAGER, "wmUpdateFocus");
+            if (DEBUG_FOCUS) Slog.v(TAG, "wmUpdateFocus");
             // This check makes sure that we don't already have the focus
             // change message pending.
             mH.removeMessages(H.REPORT_FOCUS_CHANGE);
@@ -10826,15 +10829,19 @@ public class WindowManagerService extends IWindowManager.Stub
     }
 
     private WindowState computeFocusedWindowLocked() {
+        if (DEBUG_FOCUS) Slog.v(TAG, "computeFocusedWindowLocked");
         final int displayCount = mDisplayContents.size();
+        WindowState rwin = null;
         for (int i = 0; i < displayCount; i++) {
             final DisplayContent displayContent = mDisplayContents.valueAt(i);
             WindowState win = findFocusedWindowLocked(displayContent);
-            if (win != null) {
-                return win;
-            }
+            // if (win != null) {
+            //     return win;
+            // }
+            rwin = win;
         }
-        return null;
+        if (DEBUG_FOCUS) Slog.v(TAG, "computeFocusedWindowLocked -> " + rwin);
+        return rwin;
     }
 
     private WindowState findFocusedWindowLocked(DisplayContent displayContent) {
@@ -11898,6 +11905,12 @@ public class WindowManagerService extends IWindowManager.Stub
     // There is an inherent assumption that this will never return null.
     public DisplayContent getDefaultDisplayContentLocked() {
         return getDisplayContentLocked(Display.DEFAULT_DISPLAY);
+    }
+
+    WindowList getHackyWindowListLocked() {
+        final Display[] displays = mDisplayManager.getDisplays();
+        return getDisplayContentLocked(
+            displays[displays.length-1].getDisplayId()).getWindowList();
     }
 
     public WindowList getDefaultWindowListLocked() {

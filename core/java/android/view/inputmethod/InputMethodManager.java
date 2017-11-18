@@ -917,6 +917,7 @@ public final class InputMethodManager {
      * 0 or have the {@link #SHOW_IMPLICIT} bit set.
      */
     public boolean showSoftInput(View view, int flags) {
+        if (DEBUG) Log.v(TAG, "showSoftInput 1 view=" + view);
         return showSoftInput(view, flags, null);
     }
     
@@ -969,16 +970,20 @@ public final class InputMethodManager {
      * {@link #RESULT_HIDDEN}.
      */
     public boolean showSoftInput(View view, int flags, ResultReceiver resultReceiver) {
+        if (DEBUG) Log.v(TAG, "showSoftInput 2 view=" + view);
         checkFocus();
         synchronized (mH) {
             if (mServedView != view && (mServedView == null
                     || !mServedView.checkInputConnectionProxy(view))) {
+                if (DEBUG) Log.v(TAG, "showSoftInput 2 no served servedView: " + mServedView + " view: " + view + " connection: " + (mServedView == null
+                    || !mServedView.checkInputConnectionProxy(view)));
                 return false;
             }
 
             try {
                 return mService.showSoftInput(mClient, flags, resultReceiver);
             } catch (RemoteException e) {
+                if (DEBUG) Log.v(TAG, "showSoftInput 2 remote exception" + e);
             }
             
             return false;
@@ -987,6 +992,7 @@ public final class InputMethodManager {
     
     /** @hide */
     public void showSoftInputUnchecked(int flags, ResultReceiver resultReceiver) {
+        if (DEBUG) Log.v(TAG, "showSoftInputUnchecked");
         try {
             mService.showSoftInput(mClient, flags, resultReceiver);
         } catch (RemoteException e) {
