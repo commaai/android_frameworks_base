@@ -760,10 +760,10 @@ bool BootAnimation::movie()
 
         // can be 1, 0, or not set
         #ifdef NO_TEXTURE_CACHE
-        const int noTextureCache = NO_TEXTURE_CACHE;
+        //const int noTextureCache = NO_TEXTURE_CACHE;
         #else
-        const int noTextureCache =
-                ((animation.width * animation.height * fcount) > 48 * 1024 * 1024) ? 1 : 0;
+        //const int noTextureCache =
+        //        ((animation.width * animation.height * fcount) > 48 * 1024 * 1024) ? 1 : 0;
         #endif
 
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -777,7 +777,8 @@ bool BootAnimation::movie()
         GLuint mTextureid;
         glGetIntegerv(GL_MAX_TEXTURE_SIZE, &mMaxTextureSize);
         //ALOGD("freemem:%ld, %d", getFreeMemory(), mMaxTextureSize);
-        if(getFreeMemory() < mMaxTextureSize * mMaxTextureSize * fcount / 1024 || noTextureCache) {
+        // if(getFreeMemory() < mMaxTextureSize * mMaxTextureSize * fcount / 1024 || noTextureCache) {
+        if (false) {
             ALOGD("Use save memory method, maybe small fps in actual.");
             needSaveMem = true;
             glGenTextures(1, &mTextureid);
