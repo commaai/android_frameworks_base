@@ -19192,27 +19192,27 @@ public final class ActivityManagerService extends ActivityManagerNative
                 app.kill(app.waitingToKill, true);
                 success = false;
             } else {
-                if (true) {
-                    long oldId = Binder.clearCallingIdentity();
-                    try {
-                        Process.setProcessGroup(app.pid, app.curSchedGroup);
-                    } catch (Exception e) {
-                        Slog.w(TAG, "Failed setting process group of " + app.pid
-                                + " to " + app.curSchedGroup);
-                        e.printStackTrace();
-                    } finally {
-                        Binder.restoreCallingIdentity(oldId);
-                    }
-                } else {
-                    if (app.thread != null) {
-                        try {
-                            app.thread.setSchedulingGroup(app.curSchedGroup);
-                        } catch (RemoteException e) {
-                        }
-                    }
-                }
-                Process.setSwappiness(app.pid,
-                        app.curSchedGroup <= Process.THREAD_GROUP_BG_NONINTERACTIVE);
+                // if (true) {
+                //     long oldId = Binder.clearCallingIdentity();
+                //     try {
+                //         Process.setProcessGroup(app.pid, app.curSchedGroup);
+                //     } catch (Exception e) {
+                //         Slog.w(TAG, "Failed setting process group of " + app.pid
+                //                 + " to " + app.curSchedGroup);
+                //         e.printStackTrace();
+                //     } finally {
+                //         Binder.restoreCallingIdentity(oldId);
+                //     }
+                // } else {
+                //     if (app.thread != null) {
+                //         try {
+                //             app.thread.setSchedulingGroup(app.curSchedGroup);
+                //         } catch (RemoteException e) {
+                //         }
+                //     }
+                // }
+                // Process.setSwappiness(app.pid,
+                //         app.curSchedGroup <= Process.THREAD_GROUP_BG_NONINTERACTIVE);
             }
         }
         if (app.repForegroundActivities != app.foregroundActivities) {
