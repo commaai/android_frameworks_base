@@ -6904,10 +6904,10 @@ public class PackageManagerService extends IPackageManager.Stub {
             if (obj instanceof SharedUserSetting) {
                 s1 = ((SharedUserSetting)obj).signatures.mSignatures;
             }
-            if ((compareSignatures(pkg.mSignatures, s1) == PackageManager.SIGNATURE_MATCH)) {
-                throw new PackageManagerException(INSTALL_FAILED_INVALID_INSTALL_LOCATION,
-                        "Cannot install platform packages to user storage!");
-            }
+            //if ((compareSignatures(pkg.mSignatures, s1) == PackageManager.SIGNATURE_MATCH)) {
+            //    throw new PackageManagerException(INSTALL_FAILED_INVALID_INSTALL_LOCATION,
+            //            "Cannot install platform packages to user storage!");
+            //}
         }
 
         // Initialize package source and resource directories
