@@ -577,7 +577,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
             mWifiSignalSpacer.setVisibility(View.GONE);
         }
 
-        if (mNoSimsVisible) {
+        if (mNoSimsVisible && !mIsAirplaneMode) {
             if (mNoSimsIcon == 0) mNoSimsIcon = getNoSimIcon();
             if (mNoSimsIcon != 0 && mNoSims != null && mNoSimsDark != null) {
                 mNoSims.setImageResource(mNoSimsIcon);
