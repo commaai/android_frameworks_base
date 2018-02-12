@@ -836,4 +836,23 @@ public final class BluetoothA2dp implements BluetoothProfile {
     private static void log(String msg) {
       Log.d(TAG, msg);
     }
+
+    /**
+     * This function helps selecting streaming device during handoff scenario
+     * @hide
+     */
+    public boolean selectStream(BluetoothDevice device) {
+        if (DBG) log("selectStream(" + device + ")");
+        if (mService != null && isEnabled() &&
+            isValidDevice(device)) {
+            try {
+                return mService.selectStream(device);
+            } catch (RemoteException e) {
+                Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return false;
+            }
+        }
+        if (mService == null) Log.w(TAG, "Proxy not attached to service");
+        return false;
+    }
 }

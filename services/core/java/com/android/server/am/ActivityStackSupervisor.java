@@ -217,7 +217,8 @@ public class ActivityStackSupervisor extends ConfigurationContainer implements D
     public static boolean mPerfSendTapHint = false;
     public BoostFramework mPerfBoost = null;
     public BoostFramework mPerfPack = null;
-
+    public BoostFramework mPerfIop = null;
+    public BoostFramework mUxPerf = null;
     static final int HANDLE_DISPLAY_ADDED = FIRST_SUPERVISOR_STACK_MSG + 5;
     static final int HANDLE_DISPLAY_CHANGED = FIRST_SUPERVISOR_STACK_MSG + 6;
     static final int HANDLE_DISPLAY_REMOVED = FIRST_SUPERVISOR_STACK_MSG + 7;
@@ -3109,6 +3110,20 @@ public class ActivityStackSupervisor extends ConfigurationContainer implements D
            mPerfBoost.perfHint(BoostFramework.VENDOR_HINT_FIRST_LAUNCH_BOOST, packageName, -1, BoostFramework.Launch.BOOST_V1);
            mPerfSendTapHint = true;
        }
+       // Start IOP
+       if (mPerfIop == null) {
+           mPerfIop = new BoostFramework();
+       }
+       if (mPerfIop != null) {
+           mPerfIop.perfIOPrefetchStart(-1,packageName,"");
+       }
+    }
+
+    void acquireUxPerfLock(int opcode, String packageName) {
+        mUxPerf = new BoostFramework();
+        if (mUxPerf != null) {
+            mUxPerf.perfUXEngine_events(opcode, 0, packageName, 0);
+        }
     }
 
     ActivityRecord findTaskLocked(ActivityRecord r, int displayId) {
@@ -3136,6 +3151,10 @@ public class ActivityStackSupervisor extends ConfigurationContainer implements D
                         if(mTmpFindTaskResult.r.state == ActivityState.DESTROYED ) {
                             /*It's a new app launch */
                             acquireAppLaunchPerfLock(r.packageName);
+                        }
+                        if(mTmpFindTaskResult.r.state == ActivityState.STOPPED) {
+                            /*Warm launch */
+                            acquireUxPerfLock(6, r.packageName);
                         }
                         return mTmpFindTaskResult.r;
                     } else if (mTmpFindTaskResult.r.getDisplayId() == displayId) {

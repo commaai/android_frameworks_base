@@ -106,6 +106,7 @@ import android.util.PrintWriterPrinter;
 import android.util.Slog;
 import android.util.SparseIntArray;
 import android.util.SuperNotCalledException;
+import android.util.BoostFramework;
 import android.view.ContextThemeWrapper;
 import android.view.Display;
 import android.view.ThreadedRenderer;
@@ -336,6 +337,8 @@ public final class ActivityThread {
     static volatile Handler sMainThreadHandler;  // set once in main()
 
     Bundle mCoreSettings = null;
+
+    final private int enable_uxe = SystemProperties.getInt("iop.enable_uxe", 0);
 
     static final class ActivityClientRecord {
         IBinder token;
@@ -5427,6 +5430,11 @@ public final class ActivityThread {
     }
 
     private void handleBindApplication(AppBindData data) {
+        long st_bindApp = SystemClock.uptimeMillis();
+        BoostFramework ux_perf = null;
+        if (enable_uxe != 0 && !Process.isIsolated()) {
+            ux_perf = new BoostFramework();
+        }
         // Register the UI Thread as a sensitive thread to the runtime.
         VMRuntime.registerSensitiveThread();
         if (data.trackAllocation) {
@@ -5778,6 +5786,15 @@ public final class ActivityThread {
             }
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
+        }
+        long end_bindApp = SystemClock.uptimeMillis();
+        int bindApp_dur = (int)(end_bindApp - st_bindApp);
+        String pkg_name = null;
+        if (appContext != null) {
+                pkg_name = appContext.getPackageName();
+        }
+        if (ux_perf != null && !Process.isIsolated() && pkg_name != null) {
+            ux_perf.perfUXEngine_events(2, 0, pkg_name, bindApp_dur);
         }
     }
 

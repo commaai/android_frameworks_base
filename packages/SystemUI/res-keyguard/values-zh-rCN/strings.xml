@@ -93,8 +93,8 @@
     <string name="kg_failed_attempts_almost_at_login" product="default" msgid="8364140853305528449">"您已 <xliff:g id="NUMBER_0">%1$d</xliff:g> 次画错解锁图案。如果再尝试 <xliff:g id="NUMBER_1">%2$d</xliff:g> 次后仍不成功，系统就会要求您使用自己的电子邮件帐号解锁手机。\n\n请在 <xliff:g id="NUMBER_2">%3$d</xliff:g> 秒后重试。"</string>
     <string name="kg_password_wrong_pin_code_pukked" msgid="3389829202093674267">"SIM 卡 PIN 码不正确，您现在必须联系运营商为您解锁设备。"</string>
     <plurals name="kg_password_wrong_pin_code" formatted="false" msgid="4314341367727055967">
-      <item quantity="other">SIM 卡 PIN 码不正确，您还有 <xliff:g id="NUMBER_1">%d</xliff:g> 次尝试机会。</item>
-      <item quantity="one">SIM 卡 PIN 码不正确，您还有 <xliff:g id="NUMBER_0">%d</xliff:g> 次尝试机会。如果仍不正确，则需要联系运营商帮您解锁设备。</item>
+      <item quantity="other">SIM 卡<xliff:g id="slotid">%d</xliff:g> PIN 码不正确，您还有 <xliff:g id="NUMBER_1">%d</xliff:g> 次尝试机会。</item>
+      <item quantity="one">SIM 卡<xliff:g id="slotid">%d</xliff:g> PIN 码不正确，您还有 <xliff:g id="NUMBER_0">%d</xliff:g> 次尝试机会。如果仍不正确，则需要联系运营商帮您解锁设备。</item>
     </plurals>
     <string name="kg_password_wrong_puk_code_dead" msgid="3329017604125179374">"SIM 卡无法使用，请与您的运营商联系。"</string>
     <plurals name="kg_password_wrong_puk_code" formatted="false" msgid="2287504898931957513">
@@ -134,8 +134,8 @@
 
     <!-- Instructions telling the user remaining times when enter SIM PIN view.  -->
     <plurals name="kg_password_default_pin_message">
-        <item quantity="one">输入 SIM PIN, 您还有 <xliff:g id="number">%d</xliff:g> 次尝试机会。如果仍然失败，则必须联系运营商帮您解锁设备。</item>
-        <item quantity="other">输入 SIM PIN, 您还有 <xliff:g id="number">%d</xliff:g> 次尝试机会。</item>
+        <item quantity="one">输入 SIM<xliff:g id="slotid">%d</xliff:g> PIN, 您还有 <xliff:g id="number">%d</xliff:g> 次尝试机会。如果仍然失败，则必须联系运营商帮您解锁设备。</item>
+        <item quantity="other">输入 SIM<xliff:g id="slotid">%d</xliff:g> PIN, 您还有 <xliff:g id="number">%d</xliff:g> 次尝试机会。</item>
     </plurals>
 
     <!-- Instructions telling the user remaining times when enter SIM PUK view.  -->

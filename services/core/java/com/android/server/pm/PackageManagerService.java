@@ -246,6 +246,7 @@ import android.util.SparseIntArray;
 import android.util.Xml;
 import android.util.jar.StrictJarFile;
 import android.util.proto.ProtoOutputStream;
+import android.util.BoostFramework;
 import android.view.Display;
 
 import com.android.internal.R;
@@ -18411,6 +18412,8 @@ public class PackageManagerService extends IPackageManager.Stub
         }
 
         if (DEBUG_INSTALL) Slog.d(TAG, "New package installed in " + newPackage.codePath);
+        if (pkgName != null)
+            acquireUxPerfLock(8, pkgName, 0);
         synchronized (mPackages) {
             updatePermissionsLPw(newPackage.packageName, newPackage,
                     UPDATE_PERMISSIONS_REPLACE_PKG | (newPackage.permissions.size() > 0
@@ -18686,6 +18689,7 @@ public class PackageManagerService extends IPackageManager.Stub
                     // on the device; we should replace it.
                     replace = true;
                     if (DEBUG_INSTALL) Slog.d(TAG, "Replace existing pacakge: " + pkgName);
+                    acquireUxPerfLock(8, pkgName, 1);
                 }
 
                 // Child packages are installed through the parent package
@@ -19626,7 +19630,17 @@ public class PackageManagerService extends IPackageManager.Stub
             }
         }
 
+        if (res && packageName != null) {
+            acquireUxPerfLock(7, packageName, userId);
+        }
         return res ? PackageManager.DELETE_SUCCEEDED : PackageManager.DELETE_FAILED_INTERNAL_ERROR;
+    }
+
+    private void acquireUxPerfLock(int opcode, String pkgName, int dat) {
+        BoostFramework ux_perf = new BoostFramework();
+        if (ux_perf != null) {
+            ux_perf.perfUXEngine_events(opcode, 0, pkgName, dat);
+        }
     }
 
     static class PackageRemovedInfo {
