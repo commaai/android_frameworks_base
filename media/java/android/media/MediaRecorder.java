@@ -467,6 +467,8 @@ public class MediaRecorder
         public static final int QCELP = 11;
         /** @hide Linear PCM audio codec */
         public static final int LPCM = 12;
+        /** @hide MPEGH audio codec */
+        public static final int MPEGH = 13;
     }
 
     /**

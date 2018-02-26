@@ -494,6 +494,11 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <item>array/signal_strength_umts_fully_roaming_sim1</item>
     </string-array>
 
+    <string-array name="telephony_signal_strength_4g_plus_roaming_sim1">
+        <item>array/signal_strength_4g_plus_normal_roaming_sim1</item>
+        <item>array/signal_strength_4g_plus_fully_roaming_sim1</item>
+    </string-array>
+
     <string-array name="signal_strength_g_normal_sim1">
         <item>drawable/stat_sys_signal_0_fully</item>
         <item>drawable/stat_sys_signal_1_fully</item>
@@ -780,6 +785,22 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <item>drawable/stat_sys_signal_2_fully</item>
         <item>drawable/stat_sys_signal_3_fully</item>
         <item>drawable/stat_sys_signal_4_fully</item>
+    </string-array>
+
+    <string-array name="signal_strength_4g_plus_normal_roaming_sim1">
+        <item>drawable/stat_sys_signal_0_default_roam</item>
+        <item>drawable/stat_sys_signal_1_default_roam</item>
+        <item>drawable/stat_sys_signal_2_default_roam</item>
+        <item>drawable/stat_sys_signal_3_default_roam</item>
+        <item>drawable/stat_sys_signal_4_default_roam</item>
+    </string-array>
+
+    <string-array name="signal_strength_4g_plus_fully_roaming_sim1">
+        <item>drawable/stat_sys_signal_0_default_fully_roam</item>
+        <item>drawable/stat_sys_signal_1_default_fully_roam</item>
+        <item>drawable/stat_sys_signal_2_default_fully_roam</item>
+        <item>drawable/stat_sys_signal_3_default_fully_roam</item>
+        <item>drawable/stat_sys_signal_4_default_fully_roam</item>
     </string-array>
 
     <!--signal strength description-->
