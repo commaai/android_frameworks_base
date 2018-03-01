@@ -2405,9 +2405,18 @@ public class ConnectivityService extends IConnectivityManager.Stub
                 return true;
         }
 
-        if (!nai.everConnected || nai.isVPN() || nai.isLingering() || numRequests > 0) {
+        if (!nai.everConnected || nai.isVPN() || numRequests > 0) {
             return false;
         }
+
+        if (nai.isLingering()) {
+            if (satisfiesMobileNetworkDataCheck(nai.networkCapabilities)) {
+                return false;
+            } else {
+                nai.clearLingerState();
+            }
+        }
+
         for (NetworkRequestInfo nri : mNetworkRequests.values()) {
             if (reason == UnneededFor.LINGER && nri.request.isBackgroundRequest()) {
                 // Background requests don't affect lingering.
@@ -5618,17 +5627,22 @@ public class ConnectivityService extends IConnectivityManager.Stub
         return false;
     }
 
-    private boolean satisfiesMobileMultiNetworkDataCheck(NetworkCapabilities agentNc,
-            NetworkCapabilities requestNc) {
-        if (agentNc != null && requestNc != null
-                && agentNc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-                && getIntSpecifier(requestNc.getNetworkSpecifier()) < 0) {
+    private boolean satisfiesMobileNetworkDataCheck(NetworkCapabilities agentNc) {
+        if (agentNc != null && agentNc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
             if (getIntSpecifier(agentNc.getNetworkSpecifier()) == SubscriptionManager
                                     .getDefaultDataSubscriptionId()) {
                 return true;
             } else {
                 return false;
             }
+        }
+        return true;
+    }
+
+    private boolean satisfiesMobileMultiNetworkDataCheck(NetworkCapabilities agentNc,
+            NetworkCapabilities requestNc) {
+        if (requestNc != null && getIntSpecifier(requestNc.getNetworkSpecifier()) < 0) {
+            return satisfiesMobileNetworkDataCheck(agentNc);
         }
         return true;
     }
