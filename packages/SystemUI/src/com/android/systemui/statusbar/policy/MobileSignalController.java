@@ -749,6 +749,15 @@ public class MobileSignalController extends SignalController<
 
     private int getAlternateLteLevel(SignalStrength signalStrength) {
         int lteRsrp = signalStrength.getLteDbm();
+        if ( lteRsrp == SignalStrength.INVALID ) {
+            int signalStrengthLevel = signalStrength.getLevel();
+            if (DEBUG) {
+                Log.d(mTag, "getAlternateLteLevel lteRsrp:INVALID "
+                        + " signalStrengthLevel = " + signalStrengthLevel);
+            }
+            return signalStrengthLevel;
+        }
+
         int rsrpLevel = SignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
         if (lteRsrp > -44) rsrpLevel = SignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
         else if (lteRsrp >= -97) rsrpLevel = SignalStrength.SIGNAL_STRENGTH_GREAT;
