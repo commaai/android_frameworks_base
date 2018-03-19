@@ -75,6 +75,9 @@ public class WifiConfiguration implements Parcelable {
     /** {@hide} */
     public static final String SIMNumVarName = "sim_num";
 
+    /** {@hide} */
+    public static final String shareThisApVarName = "share_this_ap";
+
     /**
      * Recognized key management schemes.
      */
@@ -345,6 +348,12 @@ public class WifiConfiguration implements Parcelable {
      * @hide
      */
     public boolean requirePMF;
+
+    /**
+     * @hide
+     * This configuration is used in AP to extend the coverage.
+     */
+    public boolean shareThisAp;
 
     /**
      * Update identifier, for Passpoint network.
@@ -1538,6 +1547,7 @@ public class WifiConfiguration implements Parcelable {
         roamingConsortiumIds = new long[0];
         priority = 0;
         hiddenSSID = false;
+        shareThisAp = false;
         allowedKeyManagement = new BitSet();
         allowedProtocols = new BitSet();
         allowedAuthAlgorithms = new BitSet();
@@ -1801,6 +1811,9 @@ public class WifiConfiguration implements Parcelable {
         }
         sbuf.append("recentFailure: ").append("Association Rejection code: ")
                 .append(recentFailure.getAssociationStatus()).append("\n");
+
+        sbuf.append("ShareThisAp: ").append(this.shareThisAp);
+        sbuf.append('\n');
         return sbuf.toString();
     }
 
@@ -2079,6 +2092,7 @@ public class WifiConfiguration implements Parcelable {
             SSID = source.SSID;
             BSSID = source.BSSID;
             FQDN = source.FQDN;
+            shareThisAp = source.shareThisAp;
             roamingConsortiumIds = source.roamingConsortiumIds.clone();
             providerFriendlyName = source.providerFriendlyName;
             isHomeProviderNetwork = source.isHomeProviderNetwork;
@@ -2160,6 +2174,7 @@ public class WifiConfiguration implements Parcelable {
         mNetworkSelectionStatus.writeToParcel(dest);
         dest.writeString(SSID);
         dest.writeString(BSSID);
+        dest.writeInt(shareThisAp ? 1 : 0);
         dest.writeInt(apBand);
         dest.writeInt(apChannel);
         dest.writeString(FQDN);
@@ -2229,6 +2244,7 @@ public class WifiConfiguration implements Parcelable {
                 config.mNetworkSelectionStatus.readFromParcel(in);
                 config.SSID = in.readString();
                 config.BSSID = in.readString();
+                config.shareThisAp = in.readInt() != 0;
                 config.apBand = in.readInt();
                 config.apChannel = in.readInt();
                 config.FQDN = in.readString();

@@ -189,5 +189,7 @@ interface IWifiManager
     boolean getWifiStaSapConcurrency();
 
     List<WifiDevice> getConnectedStations();
+
+    boolean isExtendingNetworkCoverage();
 }
 

@@ -1130,6 +1130,22 @@ public class WifiManager {
         return addOrUpdateNetwork(config);
     }
 
+     /**
+      * Check the WifiSharing mode.
+      *
+      * @return true if AP is working as an extension of currently
+      * connected STA, false if it is "custom" AP.
+      *
+      * @hide no intent to publish
+      */
+      public boolean isExtendingNetworkCoverage() {
+          try {
+              return mService.isExtendingNetworkCoverage();
+          } catch (RemoteException e) {
+              throw e.rethrowFromSystemServer();
+          }
+      }
+
     /**
      * Internal method for doing the RPC that creates a new network description
      * or updates an existing one.
