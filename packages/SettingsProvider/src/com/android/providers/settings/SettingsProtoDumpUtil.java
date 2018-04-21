@@ -459,6 +459,9 @@ class SettingsProtoDumpUtil {
                 Settings.Global.WIFI_DISPLAY_CERTIFICATION_ON,
                 GlobalSettingsProto.WIFI_DISPLAY_CERTIFICATION_ON);
         dumpSetting(s, p,
+                Settings.Global.WIFI_P2P_PASSIVE_LISTEN_ON,
+                GlobalSettingsProto.WIFI_P2P_PASSIVE_LISTEN_ON);
+        dumpSetting(s, p,
                 Settings.Global.WIFI_DISPLAY_WPS_CONFIG,
                 GlobalSettingsProto.WIFI_DISPLAY_WPS_CONFIG);
         dumpSetting(s, p,

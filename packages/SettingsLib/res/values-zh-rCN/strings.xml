@@ -191,6 +191,7 @@
     <string name="wifi_verbose_logging" msgid="4203729756047242344">"启用WLAN详细日志记录功能"</string>
     <string name="wifi_aggressive_handover" msgid="5309131983693661320">"主动从 WLAN 网络切换到移动数据网络"</string>
     <string name="wifi_allow_scan_with_traffic" msgid="3601853081178265786">"一律允许WLAN漫游扫描"</string>
+    <string name="wifi_p2p_allow_passive_listen">"允许聆听模式"</string>
     <string name="mobile_data_always_on" msgid="8774857027458200434">"始终开启移动数据网络"</string>
     <string name="tethering_hardware_offload" msgid="7470077827090325814">"网络共享硬件加速"</string>
     <string name="bluetooth_show_devices_without_names" msgid="4708446092962060176">"显示没有名称的蓝牙设备"</string>
@@ -213,6 +214,7 @@
     <string name="wifi_verbose_logging_summary" msgid="6615071616111731958">"提升WLAN日志记录级别（在WLAN选择器中显示每个SSID的RSSI）"</string>
     <string name="wifi_aggressive_handover_summary" msgid="7266329646559808827">"开启此设置后，系统会在 WLAN 信号较弱时，主动将网络模式从 WLAN 网络切换到移动数据网络"</string>
     <string name="wifi_allow_scan_with_traffic_summary" msgid="2575101424972686310">"根据接口中目前的数据流量允许/禁止WLAN漫游扫描"</string>
+    <string name="wifi_p2p_allow_passive_listen_summary">"打开或关闭聆听模式，打开后，本设备不会主动搜索其它设备，但是其它设备可以搜索到本设备"</string>
     <string name="select_logd_size_title" msgid="7433137108348553508">"日志记录器缓冲区大小"</string>
     <string name="select_logd_size_dialog_title" msgid="1206769310236476760">"选择每个日志缓冲区的日志记录器大小"</string>
     <string name="dev_logpersist_clear_warning_title" msgid="684806692440237967">"要清除永久存储的日志记录器数据吗？"</string>

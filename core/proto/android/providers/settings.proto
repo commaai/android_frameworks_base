@@ -334,6 +334,7 @@ message GlobalSettingsProto {
     SettingProto uninstalled_instant_app_min_cache_period = 290;
     SettingProto uninstalled_instant_app_max_cache_period = 291;
     SettingProto unused_static_shared_lib_min_cache_period = 292;
+    SettingProto wifi_p2p_passive_listen_on = 400;
 }
 
 message SecureSettingsProto {

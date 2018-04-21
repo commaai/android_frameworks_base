@@ -489,6 +489,8 @@
     <string name="wifi_aggressive_handover">Aggressive Wi\u2011Fi to mobile handover</string>
     <!-- Setting Checkbox title whether to enable WiFi Scanning in the presence of traffic. [CHAR LIMIT=80] -->
     <string name="wifi_allow_scan_with_traffic">Always allow Wi\u2011Fi Roam Scans</string>
+    <!-- Setting Checkbox title whether to enable WiFi p2p passive listen. [CHAR LIMIT=80] -->
+    <string name="wifi_p2p_allow_passive_listen">Allow Wi\u2011Fi P2p Passive Listen</string>
     <!-- Setting Checkbox title whether to always keep mobile data active. [CHAR LIMIT=80] -->
     <string name="mobile_data_always_on">Mobile data always active</string>
     <!-- Setting Checkbox title whether to enable hardware acceleration for tethering. [CHAR LIMIT=80] -->
@@ -541,6 +543,8 @@
     <string name="wifi_aggressive_handover_summary">When enabled, Wi\u2011Fi will be more aggressive in handing over the data connection to mobile, when Wi\u2011Fi signal is low</string>
     <!-- Setting Checkbox summary whether to always allow WiFi Roam Scans [CHAR LIMIT=130] -->
     <string name="wifi_allow_scan_with_traffic_summary">Allow/Disallow Wi\u2011Fi Roam Scans based on the amount of data traffic present at the interface</string>
+    <!-- Setting Checkbox summary whether to allow wifi p2p passive listen [CHAR LIMIT=130] -->
+    <string name="wifi_p2p_allow_passive_listen_summary">Allow/Disallow Wi\u2011Fi P2p passive listen, the device can not scan other devices, but other devices can scan the current device</string>
     <!-- UI debug setting: limit size of Android logger buffers -->
     <string name="select_logd_size_title">Logger buffer sizes</string>
     <!-- UI debug setting: limit size of Android logger buffers [CHAR LIMIT=59] -->

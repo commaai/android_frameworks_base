@@ -374,6 +374,7 @@ public class SettingsBackupTest {
                     Settings.Global.WIFI_COUNTRY_CODE,
                     Settings.Global.WIFI_DEVICE_OWNER_CONFIGS_LOCKDOWN,
                     Settings.Global.WIFI_DISPLAY_CERTIFICATION_ON,
+                    Settings.Global.WIFI_P2P_PASSIVE_LISTEN_ON,
                     Settings.Global.WIFI_DISPLAY_ON,
                     Settings.Global.WIFI_DISPLAY_WPS_CONFIG,
                     Settings.Global.WIFI_ENHANCED_AUTO_JOIN,

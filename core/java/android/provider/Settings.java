@@ -8458,6 +8458,14 @@ public final class Settings {
                "wifi_display_certification_on";
 
        /**
+        * Whether Wifi p2p passive mode is enabled/disabled
+        * 0=disabled. 1=enabled.
+        * @hide
+        */
+       public static final String WIFI_P2P_PASSIVE_LISTEN_ON =
+               "wifi_p2p_passive_listen_on";
+
+       /**
         * WPS Configuration method used by Wifi display, this setting only
         * takes effect when WIFI_DISPLAY_CERTIFICATION_ON is 1 (enabled).
         *
