@@ -1618,6 +1618,16 @@ public class PackageParser {
         final ArrayMap<String, StrictJarFile> strictJarFiles = new ArrayMap<String, StrictJarFile>();
         try {
             Trace.traceBegin(TRACE_TAG_PACKAGE_MANAGER, "strictJarFileCtor");
+            if (sPerfBoost == null) {
+                sPerfBoost = new BoostFramework();
+            }
+            if (sPerfBoost != null && !sIsPerfLockAcquired && !verified) {
+                //Use big enough number here to hold the perflock for entire PackageInstall session
+                sPerfBoost.perfHint(BoostFramework.VENDOR_HINT_PACKAGE_INSTALL_BOOST,
+                        null, Integer.MAX_VALUE, -1);
+                Log.d(TAG, "Perflock acquired for PackageInstall ");
+                sIsPerfLockAcquired = true;
+            }
             // Ignore signature stripping protections when verifying APKs from system partition.
             // For those APKs we only care about extracting signer certificates, and don't care
             // about verifying integrity.
@@ -1663,16 +1673,6 @@ public class PackageParser {
                     toVerify.add(entry);
                 }
             }
-            if (sPerfBoost == null) {
-                sPerfBoost = new BoostFramework();
-            }
-            if (sPerfBoost != null && !sIsPerfLockAcquired) {
-                //Use big enough number here to hold the perflock for entire PackageInstall session
-                sPerfBoost.perfHint(BoostFramework.VENDOR_HINT_PACKAGE_INSTALL_BOOST,
-                        null, Integer.MAX_VALUE, -1);
-                Log.d(TAG, "Perflock acquired for PackageInstall ");
-                sIsPerfLockAcquired = true;
-            }
             // Verify that entries are signed consistently with the first entry
             // we encountered. Note that for splits, certificates may have
             // already been populated during an earlier parse of a base APK.
@@ -1683,6 +1683,7 @@ public class PackageParser {
                 public boolean wait;
                 public int index;
                 public Object objWaitAll;
+                public boolean shutDown;
             }
             VerificationData vData = new VerificationData();
             vData.objWaitAll = new Object();
@@ -1696,13 +1697,22 @@ public class PackageParser {
                 Runnable verifyTask = new Runnable(){
                     public void run() {
                         try {
-                            long tid = Thread.currentThread().getId();
-                            final StrictJarFile tempJarFile;
+                            if (vData.exceptionFlag != 0) {
+                                Slog.w(TAG, "verifyV1 exit with Exception " + vData.exceptionFlag);
+                                return;
+                            }
+                            String tid = Long.toString(Thread.currentThread().getId());
+                            StrictJarFile tempJarFile;
                             synchronized (strictJarFiles) {
-                                if (strictJarFiles.get(Long.toString(tid)) == null) {
-                                    strictJarFiles.put(Long.toString(tid), sJarFiles[vData.index++]);
+                                tempJarFile = strictJarFiles.get(tid);
+                                if (tempJarFile == null) {
+                                    //add bound check due to threads pool re-created under uncatched exception.
+                                    if (vData.index >= NUMBER_OF_CORES){
+                                        vData.index = 0;
+                                    }
+                                    tempJarFile = sJarFiles[vData.index++];
+                                    strictJarFiles.put(tid, tempJarFile);
                                 }
-                                tempJarFile = strictJarFiles.get(Long.toString(tid));
                             }
                             final Certificate[][] entryCerts = loadCertificates(tempJarFile, entry);
                             if (ArrayUtils.isEmpty(entryCerts)) {
@@ -1751,17 +1761,18 @@ public class PackageParser {
             }
             vData.wait = true;
             verificationExecutor.shutdown();
-            while (vData.wait && vData.exceptionFlag == 0){
+            while (vData.wait){
                 try {
+                    if (vData.exceptionFlag != 0 && !vData.shutDown) {
+                        Slog.w(TAG, "verifyV1 Exception " + vData.exceptionFlag);
+                        verificationExecutor.shutdownNow();
+                        vData.shutDown = true;
+                    }
                     vData.wait = !verificationExecutor.awaitTermination(50,
                             TimeUnit.MILLISECONDS);
                 } catch (InterruptedException e) {
                     Slog.w(TAG,"VerifyV1 interrupted while awaiting all threads done...");
                 }
-            }
-            if (vData.wait) {
-                Slog.w(TAG, "verifyV1 Exception " + vData.exceptionFlag);
-                verificationExecutor.shutdownNow();
             }
             Trace.traceEnd(TRACE_TAG_PACKAGE_MANAGER);
             if (vData.exceptionFlag != 0)
