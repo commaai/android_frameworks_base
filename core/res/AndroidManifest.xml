@@ -336,6 +336,7 @@
     <protected-broadcast android:name="android.net.wigig.p2p.PERSISTENT_GROUPS_CHANGED" />
 
     <protected-broadcast android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+    <protected-broadcast android:name="android.net.wifi.WIFI_DATA_STALL" />
     <protected-broadcast android:name="android.net.wifi.WIFI_AP_STATE_CHANGED" />
     <protected-broadcast android:name="android.net.wifi.WIFI_CREDENTIAL_CHANGED" />
     <protected-broadcast android:name="android.net.wifi.WIFI_SCAN_AVAILABLE" />

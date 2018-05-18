@@ -81,6 +81,10 @@ public class MobileSignalController extends SignalController<
     private int mStyle = STATUS_BAR_STYLE_ANDROID_DEFAULT;
     private boolean mDualBar = false;
 
+    private int[] mCarrierOneThresholdValues = null;
+    private boolean mIsCarrierOneNetwork = false;
+    private String[] mCarrierOneMccMncs = null;
+
     // TODO: Reduce number of vars passed in, if we have the NetworkController, probably don't
     // need listener lists anymore.
     public MobileSignalController(Context context, Config config, boolean hasMobileData,
@@ -119,6 +123,10 @@ public class MobileSignalController extends SignalController<
         mLastState.iconGroup = mCurrentState.iconGroup = mDefaultIcons;
         // Get initial data sim state.
         updateDataSim();
+        mCarrierOneMccMncs = mContext.getResources().getStringArray(
+                R.array.config_carrier_one_networks);
+        mCarrierOneThresholdValues = mContext.getResources().getIntArray(
+                R.array.carrier_one_strength_threshold_values);
         mObserver = new ContentObserver(new Handler(receiverLooper)) {
             @Override
             public void onChange(boolean selfChange) {
@@ -511,10 +519,24 @@ public class MobileSignalController extends SignalController<
             } else {
                 mCurrentState.level = mSignalStrength.getLevel();
                 if (mConfig.showRsrpSignalLevelforLTE) {
+                    if (DEBUG) {
+                        Log.d(mTag, "updateTelephony: CS:" + mServiceState.getVoiceNetworkType()
+                                + "/" + TelephonyManager.getNetworkTypeName(
+                                        mServiceState.getVoiceNetworkType())
+                                + ", PS:" + mServiceState.getDataNetworkType()
+                                + "/"+ TelephonyManager.getNetworkTypeName(
+                                        mServiceState.getDataNetworkType()));
+                    }
                     int dataType = mServiceState.getDataNetworkType();
                     if (dataType == TelephonyManager.NETWORK_TYPE_LTE ||
                             dataType == TelephonyManager.NETWORK_TYPE_LTE_CA) {
                         mCurrentState.level = getAlternateLteLevel(mSignalStrength);
+                    }else if ( dataType == TelephonyManager.NETWORK_TYPE_UNKNOWN) {
+                        int voiceType = mServiceState.getVoiceNetworkType();
+                        if (voiceType == TelephonyManager.NETWORK_TYPE_LTE ||
+                                voiceType == TelephonyManager.NETWORK_TYPE_LTE_CA) {
+                            mCurrentState.level = getAlternateLteLevel(mSignalStrength);
+                        }
                     }
                 }
             }
@@ -818,7 +840,27 @@ public class MobileSignalController extends SignalController<
                         ((signalStrength == null) ? "" : (" level=" + signalStrength.getLevel())));
             }
             mSignalStrength = signalStrength;
+            if (mIsCarrierOneNetwork && mSignalStrength != null &&
+                    mCarrierOneThresholdValues != null) {
+                Log.d(mTag, "Updating Threshold values for CarrierOne network");
+                mSignalStrength.setThreshRsrp(mCarrierOneThresholdValues);
+            }
+
             updateTelephony();
+        }
+
+        private boolean isCarrierOneOperatorRegistered(ServiceState state) {
+            String operatorNumeric = state.getOperatorNumeric();
+            if (mCarrierOneMccMncs == null || mCarrierOneMccMncs.length == 0 ||
+                    TextUtils.isEmpty(operatorNumeric)) {
+                return false;
+            }
+            for (String numeric : mCarrierOneMccMncs) {
+                if (operatorNumeric.equals(numeric)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override
@@ -828,6 +870,8 @@ public class MobileSignalController extends SignalController<
                         + " dataState=" + state.getDataRegState());
             }
             mServiceState = state;
+            mIsCarrierOneNetwork = isCarrierOneOperatorRegistered(mServiceState);
+            Log.d(mTag, "onServiceStateChanged mIsCarrierOneNetwork = " + mIsCarrierOneNetwork);
             if (state != null) {
                 mDataNetType = state.getDataNetworkType();
                 if (mDataNetType == TelephonyManager.NETWORK_TYPE_LTE && mServiceState != null &&

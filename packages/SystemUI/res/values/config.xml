@@ -514,4 +514,12 @@
         <item>60</item>
         <item>120</item>
     </integer-array>
+
+    <!-- List of Carrier one mcc mncs-->
+    <string-array name="config_carrier_one_networks" translatable="false">
+    </string-array>
+
+    <!-- List of Carrier one signal strength threshold values-->
+    <integer-array name="carrier_one_strength_threshold_values">
+    </integer-array>
 </resources>

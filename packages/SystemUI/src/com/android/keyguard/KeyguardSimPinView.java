@@ -123,14 +123,22 @@ public class KeyguardSimPinView extends KeyguardPinBasedInputView {
 
     private String getPinPasswordErrorMessage(int attemptsRemaining, boolean isDefault) {
         String displayMessage;
+        int count = TelephonyManager.getDefault().getSimCount();
         int msgId;
         if (attemptsRemaining == 0) {
             displayMessage = getContext().getString(R.string.kg_password_wrong_pin_code_pukked);
         } else if (attemptsRemaining > 0) {
-            msgId = isDefault ? R.plurals.kg_password_default_pin_message :
-                     R.plurals.kg_password_wrong_pin_code;
-            displayMessage = getContext().getResources()
-                    .getQuantityString(msgId, attemptsRemaining, mSlotId, attemptsRemaining);
+            if (count < 2) {
+                msgId = isDefault ? R.plurals.kg_password_default_pin_message_ssim :
+                        R.plurals.kg_password_wrong_pin_code_ssim;
+                displayMessage = getContext().getResources()
+                        .getQuantityString(msgId, attemptsRemaining, attemptsRemaining);
+            } else {
+                msgId = isDefault ? R.plurals.kg_password_default_pin_message :
+                        R.plurals.kg_password_wrong_pin_code;
+                displayMessage = getContext().getResources()
+                        .getQuantityString(msgId, attemptsRemaining, mSlotId, attemptsRemaining);
+            }
         } else {
             msgId = isDefault ? R.string.kg_sim_pin_instructions : R.string.kg_password_pin_failed;
             displayMessage = getContext().getString(msgId);
