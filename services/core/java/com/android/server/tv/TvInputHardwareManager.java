@@ -444,7 +444,8 @@ class TvInputHardwareManager implements TvInputHal.Callback {
             }
             Connection connection = mConnections.get(deviceId);
             for (TvStreamConfig config : connection.getConfigsLocked()) {
-                if (config.getType() == TvStreamConfig.STREAM_TYPE_BUFFER_PRODUCER) {
+            if ((config.getType() == TvStreamConfig.STREAM_TYPE_BUFFER_PRODUCER) ||
+                (config.getType() == TvStreamConfig.STREAM_TYPE_INDEPENDENT_VIDEO_SOURCE)) {
                     configsList.add(config);
                 }
             }
