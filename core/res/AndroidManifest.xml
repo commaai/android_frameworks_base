@@ -188,6 +188,8 @@
     <protected-broadcast
         android:name="android.bluetooth.avrcp-controller.profile.action.CONNECTION_STATE_CHANGED" />
     <protected-broadcast
+        android:name="android.bluetooth.avrcp-controller.profile.action.UIDS_EVENT" />
+    <protected-broadcast
         android:name="android.bluetooth.input.profile.action.CONNECTION_STATE_CHANGED" />
     <protected-broadcast
         android:name="android.bluetooth.input.profile.action.PROTOCOL_MODE_CHANGED" />
