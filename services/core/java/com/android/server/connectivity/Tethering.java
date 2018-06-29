@@ -279,8 +279,7 @@ public class Tethering extends BaseNetworkObserver {
             if (up) {
                 maybeTrackNewInterfaceLocked(iface);
             } else {
-                if (ifaceNameToType(iface) == ConnectivityManager.TETHERING_BLUETOOTH ||
-                    ifaceNameToType(iface) == ConnectivityManager.TETHERING_WIGIG) {
+                if (ifaceNameToType(iface) == ConnectivityManager.TETHERING_WIGIG) {
                     stopTrackingInterfaceLocked(iface);
                 } else {
                     // Ignore usb0 down after enabling RNDIS.

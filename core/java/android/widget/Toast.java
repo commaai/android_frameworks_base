@@ -528,6 +528,14 @@ public class Toast {
                     mWM.removeViewImmediate(mView);
                 }
 
+
+                // Now that we've removed the view it's safe for the server to release
+                // the resources.
+                try {
+                    getService().finishToken(mPackageName, this);
+                } catch (RemoteException e) {
+                }
+
                 mView = null;
             }
         }
