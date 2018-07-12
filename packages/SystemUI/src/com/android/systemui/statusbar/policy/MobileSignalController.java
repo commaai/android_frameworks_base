@@ -349,7 +349,9 @@ public class MobileSignalController extends SignalController<
                 && (mDataNetType == TelephonyManager.NETWORK_TYPE_LTE_CA
                        || mDataNetType == TelephonyManager.NETWORK_TYPE_LTE)) showDataIcon = true;
         int typeIcon = (showDataIcon && mStyle == STATUS_BAR_STYLE_ANDROID_DEFAULT) ? icons.mDataType : 0;
-        int dataActivityId = showDataIcon && !showMobileActivity() ? icons.mActivityId : 0;
+        boolean showDataActivity = mCurrentState.dataConnected
+                && !mCurrentState.carrierNetworkChangeMode;
+        int dataActivityId = showDataActivity && !showMobileActivity() ? icons.mActivityId : 0;
         callback.setMobileDataIndicators(statusIcon, qsIcon, typeIcon, qsTypeIcon,
                 activityIn, activityOut, dataActivityId,
                 icons.mStackedDataIcon, icons.mStackedVoiceIcon,

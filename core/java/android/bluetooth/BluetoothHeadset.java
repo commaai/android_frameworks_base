@@ -663,14 +663,19 @@ public final class BluetoothHeadset implements BluetoothProfile {
     public boolean isAudioConnected(BluetoothDevice device) {
         if (VDBG) log("isAudioConnected()");
         final IBluetoothHeadset service = mService;
-        if (service != null && isEnabled() && isValidDevice(device)) {
-            try {
-                return service.isAudioConnected(device);
-            } catch (RemoteException e) {
-              Log.e(TAG,  Log.getStackTraceString(new Throwable()));
+        try {
+            mServiceLock.readLock().lock();
+            if (service != null && isEnabled() && isValidDevice(device)) {
+                try {
+                    return service.isAudioConnected(device);
+                } catch (RemoteException e) {
+                Log.e(TAG,  Log.getStackTraceString(new Throwable()));
+               }
             }
+            if (service == null) Log.w(TAG, "Proxy not attached to service");
+        } finally {
+            mServiceLock.readLock().unlock();
         }
-        if (service == null) Log.w(TAG, "Proxy not attached to service");
         return false;
     }
 
