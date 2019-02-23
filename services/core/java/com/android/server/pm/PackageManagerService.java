@@ -24251,47 +24251,47 @@ Slog.v(TAG, ":: stepped forward, applying functor at tag " + parser.getName());
 
         // First look for stale data that doesn't belong, and check if things
         // have changed since we did our last restorecon
-        if ((flags & StorageManager.FLAG_STORAGE_CE) != 0) {
-            if (StorageManager.isFileEncryptedNativeOrEmulated()
-                    && !StorageManager.isUserKeyUnlocked(userId)) {
-                throw new RuntimeException(
-                        "Yikes, someone asked us to reconcile CE storage while " + userId
-                                + " was still locked; this would have caused massive data loss!");
-            }
+        //if ((flags & StorageManager.FLAG_STORAGE_CE) != 0) {
+        //    if (StorageManager.isFileEncryptedNativeOrEmulated()
+        //            && !StorageManager.isUserKeyUnlocked(userId)) {
+        //        throw new RuntimeException(
+        //                "Yikes, someone asked us to reconcile CE storage while " + userId
+        //                        + " was still locked; this would have caused massive data loss!");
+        //    }
 
-            final File[] files = FileUtils.listFilesOrEmpty(ceDir);
-            for (File file : files) {
-                final String packageName = file.getName();
-                try {
-                    assertPackageKnownAndInstalled(volumeUuid, packageName, userId);
-                } catch (PackageManagerException e) {
-                    logCriticalInfo(Log.WARN, "Destroying " + file + " due to: " + e);
-                    try {
-                        mInstaller.destroyAppData(volumeUuid, packageName, userId,
-                                StorageManager.FLAG_STORAGE_CE, 0);
-                    } catch (InstallerException e2) {
-                        logCriticalInfo(Log.WARN, "Failed to destroy: " + e2);
-                    }
-                }
-            }
-        }
-        if ((flags & StorageManager.FLAG_STORAGE_DE) != 0) {
-            final File[] files = FileUtils.listFilesOrEmpty(deDir);
-            for (File file : files) {
-                final String packageName = file.getName();
-                try {
-                    assertPackageKnownAndInstalled(volumeUuid, packageName, userId);
-                } catch (PackageManagerException e) {
-                    logCriticalInfo(Log.WARN, "Destroying " + file + " due to: " + e);
-                    try {
-                        mInstaller.destroyAppData(volumeUuid, packageName, userId,
-                                StorageManager.FLAG_STORAGE_DE, 0);
-                    } catch (InstallerException e2) {
-                        logCriticalInfo(Log.WARN, "Failed to destroy: " + e2);
-                    }
-                }
-            }
-        }
+        //    final File[] files = FileUtils.listFilesOrEmpty(ceDir);
+        //    for (File file : files) {
+        //        final String packageName = file.getName();
+        //        try {
+        //            assertPackageKnownAndInstalled(volumeUuid, packageName, userId);
+        //        } catch (PackageManagerException e) {
+        //            logCriticalInfo(Log.WARN, "Destroying " + file + " due to: " + e);
+        //            try {
+        //                mInstaller.destroyAppData(volumeUuid, packageName, userId,
+        //                        StorageManager.FLAG_STORAGE_CE, 0);
+        //            } catch (InstallerException e2) {
+        //                logCriticalInfo(Log.WARN, "Failed to destroy: " + e2);
+        //            }
+        //        }
+        //    }
+        //}
+        //if ((flags & StorageManager.FLAG_STORAGE_DE) != 0) {
+        //    final File[] files = FileUtils.listFilesOrEmpty(deDir);
+        //    for (File file : files) {
+        //        final String packageName = file.getName();
+        //        try {
+        //            assertPackageKnownAndInstalled(volumeUuid, packageName, userId);
+        //        } catch (PackageManagerException e) {
+        //            logCriticalInfo(Log.WARN, "Destroying " + file + " due to: " + e);
+        //            try {
+        //                mInstaller.destroyAppData(volumeUuid, packageName, userId,
+        //                        StorageManager.FLAG_STORAGE_DE, 0);
+        //            } catch (InstallerException e2) {
+        //                logCriticalInfo(Log.WARN, "Failed to destroy: " + e2);
+        //            }
+        //        }
+        //    }
+        //}
 
         // Ensure that data directories are ready to roll for all packages
         // installed for this volume and user
