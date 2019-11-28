@@ -1227,7 +1227,9 @@ public final class SystemServer {
                 } catch (Throwable e) {
                     reportWtf("Notifying AudioService running", e);
                 }
-                Watchdog.getInstance().start();
+
+                // COMMA: Disabling the Watchdog since it kills everything after boot sometimes
+                // Watchdog.getInstance().start();
 
                 // It is now okay to let the various system services start their
                 // third party code...
