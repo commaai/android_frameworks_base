@@ -153,7 +153,7 @@ public final class ActivityStackSupervisor implements DisplayListener {
     static final int SLEEP_TIMEOUT = 5 * 1000;
 
     // How long we can hold the launch wake lock before giving up.
-    static final int LAUNCH_TIMEOUT = 10 * 1000;
+    static final int LAUNCH_TIMEOUT = 10;
 
     static final int IDLE_TIMEOUT_MSG = FIRST_SUPERVISOR_STACK_MSG;
     static final int IDLE_NOW_MSG = FIRST_SUPERVISOR_STACK_MSG + 1;
