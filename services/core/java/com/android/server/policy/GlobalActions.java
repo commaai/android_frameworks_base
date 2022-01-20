@@ -51,6 +51,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -582,8 +583,10 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
 
             @Override
             public void onPress() {
-                Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                Intent intent = new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("extra_prefs_show_button_bar", true);
+                intent.putExtra("extra_prefs_set_next_text", (String) null);
                 mContext.startActivity(intent);
             }
 
