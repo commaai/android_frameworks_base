@@ -2536,6 +2536,10 @@ public class NetworkPolicyManagerService extends INetworkPolicyManager.Stub {
                         // for 2MB threshold for 2GB/month rules.
                         final long persistThreshold = lowestRule / 1000;
                         mNetworkStats.advisePersistThreshold(persistThreshold);
+                    } catch (IllegalStateException e) {
+                        // comma:
+                        // ignored; service lives in system_server
+                        Log.wtf(TAG, "problem with advise persist threshold", e);
                     } catch (RemoteException e) {
                         // ignored; service lives in system_server
                     }
